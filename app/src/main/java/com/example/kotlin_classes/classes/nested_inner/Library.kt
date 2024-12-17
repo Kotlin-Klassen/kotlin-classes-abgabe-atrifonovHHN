@@ -1,37 +1,101 @@
 package com.example.kotlin_classes.classes.nested_inner
 
+import com.example.kotlin_classes.classes.data.Book
+import com.example.kotlin_classes.classes.sealed_class.CheckedOut
+import com.example.kotlin_classes.classes.sealed_class.Reserved
+
 /**
- * 1.)-> Erstelle eine Klasse Library, die Informationen über eine Bibliothek enthält.
+ * Represents a library that holds books and has members who can borrow and reserve books.
  *
- * 2.)-> Erstelle eine nested class Book, die Informationen über ein Buch speichert (z.B. Titel und Autor).
- *
- * 3.)-> Erstelle eine inner class Librarian, die auf den Namen der Bibliothek zugreifen und einen Satz ausgeben kann,
- *       der den Bibliotheksnamen und den Namen des Bibliothekars enthält.
- *
- * 4.)->     Teste im main-Bereich die Funktionalität, indem du ein Buch und einen Bibliothekar erstellst und ihre Informationen ausgibst.
+ * @property books A list of books that the library currently holds.
+ * @property members A list of library members who can borrow or reserve books.
  */
+class Library {
 
-// Äußere Klasse für eine Bibliothek
-class Library(val libraryName: String) {
+    private val books = mutableListOf<Book>()
+    private val members = mutableListOf<LibraryMember>()
 
-    // Nested Class: Kann unabhängig von Library verwendet werden
-    class Book(val title: String, val author: String) {
-        fun getBookInfo() = "Book Title: $title, Author: $author"
+    /**
+     * Represents the address of the library.
+     *
+     * @property street The street name of the library's location.
+     * @property city The city where the library is located.
+     * @property zipCode The zip code for the library's location.
+     */
+    class LibraryAddress(
+        private val street: String,
+        private val city: String,
+        private val zipCode: String
+    ) {
+        /**
+         * Prints the full address of the library.
+         */
+        fun printAddress() {
+            println("Library address: $street, $city, $zipCode")
+        }
     }
 
-    // Inner Class: Hat Zugriff auf die Mitglieder der äußeren Klasse Library
-    inner class Librarian(val name: String) {
-        fun getLibrarianInfo() = "Librarian: $name, Library: $libraryName"
+    /**
+     * Represents a library member who can borrow or reserve books.
+     *
+     * @property name The name of the library member.
+     * @property memberID A unique ID for the library member.
+     */
+    inner class LibraryMember(
+        private val name: String,
+        private val memberID: Int
+    ) {
+
+        /**
+         * Allows a member to check out a book and sets the due date.
+         *
+         * @param book The book to check out.
+         * @param dueDate The due date for returning the book.
+         */
+        fun checkoutBook(book: Book, dueDate: String) {
+            book.status = CheckedOut(book.title, dueDate)
+        }
+
+        /**
+         * Allows a member to reserve a book.
+         *
+         * @param book The book to reserve.
+         */
+        fun reserveBook(book: Book) {
+            book.status = Reserved(book.title, name)
+        }
     }
-}
 
-fun main() {
-    // Erstellen einer Nested Class-Instanz
-    val book = Library.Book("Kotlin Programming", "John Doe")
-    println(book.getBookInfo())  // Ausgabe: "Book Title: Kotlin Programming, Author: John Doe"
+    /**
+     * Adds a book to the library's collection.
+     *
+     * @param book The book to add to the library.
+     */
+    fun addBook(book: Book) {
+        books.add(book)
+    }
 
-    // Erstellen einer Library-Instanz und einer Inner Class-Instanz
-    val myLibrary = Library("City Library")
-    val librarian = myLibrary.Librarian("Alice Smith")
-    println(librarian.getLibrarianInfo())  // Ausgabe: "Librarian: Alice Smith, Library: City Library"
+    /**
+     * Searches for books in the library based on the title or author.
+     *
+     * @param query The search term (either a part of the book title or author name).
+     * @return A list of books matching the search criteria.
+     */
+    fun searchBooks(query: String): List<Book> {
+        return books.filter {
+            it.title.contains(query, ignoreCase = true) || it.author.contains(
+                query,
+                ignoreCase = true
+            )
+        }
+    }
+
+    /**
+     * Displays the status of all books in the library, printing whether they are available, checked out, or reserved.
+     */
+    fun displayBookStatuses() {
+        for (book in books) {
+            println(book.status.printStatus())
+        }
+    }
 }

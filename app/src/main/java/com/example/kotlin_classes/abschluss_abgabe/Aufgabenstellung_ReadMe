@@ -1,9 +1,3 @@
-Bei Fragen gerne uns eine Mail Schreiben:
-mhottmann@stud.hs-heilbronn.de
-phottmann@stud.hs-heilbronn.de
-jwilleke@stud.hs-heilbronn.de
-
-
 1. Data Class für Bücher
 
     ->Erstelle eine Data Class Book mit den folgenden Eigenschaften:
@@ -53,7 +47,7 @@ jwilleke@stud.hs-heilbronn.de
         Ein Buch nach Titel oder Autor zu durchsuchen.
         Den aktuellen Status aller Bücher anzuzeigen.
 
-5. Implementiere die main()-Funktion
+5. Implementiere die com.example.kotlin_classes.main()-Funktion
 
     Erstelle eine Instanz der Library und füge verschiedene Bücher hinzu.
     Füge eine Adresse der Bibliothek hinzu und gib diese aus.
